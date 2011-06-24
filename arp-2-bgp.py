@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Copyright (c) 2011 Nikhef. All rights reserved.
+# Author: Oscar Koeroo <okoeroo (at) nikhef (dot) nl>
 # BSD Licence
 
 import subprocess, os, sys

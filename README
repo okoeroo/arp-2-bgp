@@ -1,0 +1,45 @@
+Copyright (c) 2011 Nikhef. All rights reserved.
+Author: Oscar Koeroo <okoeroo (at) nikhef (dot) nl>
+BSD Licence
+
+
+Prerequisites:
+The script is intended to run as a cronjob on any Arista Networks 7k-series switch running EOS 4.5 and higher. The script is developed using Python 2.7, and works on the Arista provided Python 2.6 (comes with EOS 4.7). The testing has been done on an Arista 7148SX with EOS 4.7. The intended platform is a newer model (currently unlisted) running EOS 4.7.
+
+
+Synopsis:
+arp-2-bgp.py [config file]
+
+
+Installation:
+Install the script (and configuration file) in the /persist directory on the switch and configure a crontab in the bash shell as the root user to run this script every 5 minutes.
+
+
+Description:
+Based on Arp information announce routes to a particular host using BGP.
+
+
+Summary:
+This script will read the arp table output to collect the connected IP addresses to the switch. This information needs to be made available to another (layer-3) switch using BGP. This feature is makes it possible to use multiple switches to implement a layer-2 network, while each of them connecting to another (set of) switches, based on layer-3 routing.
+
+This solution makes it possible to re-route traffic over another switch in the layer-2 domain to the neighbouring switch based on its layer-3 link. The net-result will be an aggregation possibility of saturating both Layer-3 links by the traffic of either layer-2 connected switches. See ascii-art picture below:
+
+
+|-------|                 ---------
+| sw 1  |------Layer 3----|  sw 3 |
+|-------|                 ---------
+    |                        /
+ Layer-2                    /
+    |                      /
+|-------|                 /
+| sw 2  |------Layer 3---/
+|-------|
+
+
+
+Innerworking:
+The script will read the output of the command "show ip arp" from the switch commandline interface and the output of the "show run | include network". All the IP addresses in the arp-table will be parsed with the information on which link and Vlan they reside. The current BGP state will be filtered on the entries that match the /32 subnet mask exclusively, all the other entries are ignored.
+
+The second level of filtered is based on the contents of the configuration file. The configuration file has [includes] and [excludes] rules based on vlans, interfaces and the combination of a particular Vlan on an interface.
+
+Based on the "selection" section in the "[defaults]" header in the configuation file 
