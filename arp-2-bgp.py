@@ -215,10 +215,8 @@ class Arp2Bgp(object):
 
     def is_vlan_included(self, ip_link):
         if 'vlans' in ip_link and self.include_vlans != None:
-            for vlan in ip_link['vlans']:
-                for incl_vlan in self.include_vlans:
-                    if vlan == incl_vlan:
-                        return True
+            if set(ip_link['vlans']) & set(self.include_vlans):
+                return True
         return False
 
     def is_vlan_excluded(self, ip_link):
