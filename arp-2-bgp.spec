@@ -6,7 +6,7 @@ Vendor: Nikhef
 License: BSD
 Group: Applications/System
 URL: https://github.com/okoeroo/arp-2-bgp
-Source0: https://github.com/okoeroo/%{name}.git
+Source0: https://github.com/okoeroo/%{name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 #BuildRequires: python
 Requires: python

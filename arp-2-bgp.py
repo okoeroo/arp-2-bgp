@@ -10,7 +10,7 @@ import ConfigParser
 #import Tac, PyClient
 
 
-dry_run          = True
+dry_run          = False
 run_in_test_mode = False
 
 if run_in_test_mode:
@@ -23,7 +23,7 @@ else:
     cmd_showinBGP     = "show run | include network"
 
 
-class Arp2Bgp:
+class Arp2Bgp(object):
     table_ip_link = []
     table_in_bgp  = []
     table_bgp_add = None
