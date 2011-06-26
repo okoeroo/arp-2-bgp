@@ -66,7 +66,7 @@ class Arp2Bgp(object):
 
         return my_stdout
 
-    def __init__(self, conffile):
+    def __init__(self, conffile="/etc/arp-2-bgp.conf"):
         # The 'show run' command requires administrative privileges (aka root) to work
         if not run_in_test_mode:
             if os.geteuid() != 0:
