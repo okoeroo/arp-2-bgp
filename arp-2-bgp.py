@@ -221,26 +221,20 @@ class Arp2Bgp(object):
 
     def is_vlan_excluded(self, ip_link):
         if 'vlans' in ip_link and self.exclude_vlans != None:
-            for vlan in ip_link['vlans']:
-                for excl_vlan in self.exclude_vlans:
-                    if vlan == excl_vlan:
-                        return True
+            if set(ip_link['vlans']) & set(self.exclude_vlans):
+                return True
         return False
 
     def is_interface_included(self, ip_link):
         if 'interfaces' in ip_link and self.include_interfaces != None:
-            for iface in ip_link['interfaces']:
-                for incl_iface in self.include_interfaces:
-                    if iface == incl_iface:
-                        return True
+            if set(ip_link['interfaces']) & set(self.include_interfaces):
+                return True
         return False
 
     def is_interface_excluded(self, ip_link):
         if 'interfaces' in ip_link and self.exclude_interfaces != None:
-            for iface in ip_link['interfaces']:
-                for excl_iface in self.exclude_interfaces:
-                    if iface == excl_iface:
-                        return True
+            if set(ip_link['interfaces']) & set(self.exclude_interfaces):
+                return True
         return False
 
     def is_vlan_on_interface_included(self, ip_link):
