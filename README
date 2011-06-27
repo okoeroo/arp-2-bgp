@@ -55,4 +55,6 @@ Background information:
 For questions and/or background information you can email me or others from the Physics Data Prosessing group at Nikhef for more detail on our HPC/HTC Cloud-ready infrastructure. 
 
 
-
+Acknowledgements:
+The BofH for letting me play with this hardware.
+Floor Terra for some code cleanups and the first setup.py file.
