@@ -10,9 +10,10 @@ setup(
     author="Oscar Koeroo",
     author_email="okoeroo@nikhef.nl",
     url="https://github.com/okoeroo/arp-2-bgp",
-    packages=["arp2bgp"],
+#    packages=["arp2bgp"],
     data_files=[  ('/etc', ['arp2bgp/arp-2-bgp.conf']),
-                  ('/etc/cron.d', ['arp2bgp/arp-2-bgp.cron'])
+                  ('/etc/cron.d', ['arp2bgp/arp-2-bgp.cron']),
+                  ('/usr/local/bin', ['arp2bgp/arp-2-bgp.py'])
                ],
     options = {'bdist_rpm':{'post_install' : 'package_scripts/post_install',
                             'post_uninstall' : 'package_scripts/post_uninstall'}},
