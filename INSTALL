@@ -1,0 +1,110 @@
+====================
+arp-2-bgp
+Author: Oscar Koeroo
+====================
+
+
+Outline
+=======
+This INSTALL file will give you the instructions to download, store, load and
+enable the persistency of an extension for an Arista Network EOS 4.4 and newer
+(virtual) switch.
+
+
+Installation instructions on your Arista - EOS 4.5 through 4.7
+==============================================================
+
+0. Get the RPM
+--------------
+Either download it from a site that has prepared it, or construct the RPM
+yourself from the source.
+
+0.1 Download the source:
+    https://github.com/okoeroo/arp-2-bgp
+
+0.2 Build the source into an RPM package
+    python setup.py bdist --format=rpm
+
+    use Python 2.5 or higher
+
+0.3 Troubleshooting this phase:
+    There might be a package error relating to unpackaged files.
+
+    Use the following command to fix this:
+    cat '%_unpackaged_files_terminate_build 0' >> ~/.rpmmacros
+
+
+1. Copy to the Arista
+---------------------
+There are various options on getting the RPM on it, which are:
+    - Through a USB stick on the device, an NFS mount or a typical network
+      download
+    - In the switch mode: use the 'copy $FROM_URL $TO_URL' command.
+    - Or in the bash shell by using all available Linux tools: curl, wget, cp,
+      mv and all other tools.
+
+The permanent store is on the internal flash drive. This drive is mounted by
+default on /mnt/flash/. On this drive the extensions are physically stored in
+/mnt/flash/.extensions/. The safest, easiest and most sustainable method of
+downloading and storing a new extension is by using the 'copy' command on the
+switch CLI.
+
+Here are two examples, using the switch Cli:
+    Speeltuin-02>
+    Speeltuin-02>ena
+    Speeltuin-02>copy http://192.16.199.166/somefile/for/example.rpm extensions:arp-2-bgp-arista-0.0.1-1.noarch.rpm
+
+Using the bash shell:
+    Speeltuin-02>
+    Speeltuin-02>ena
+    Speeltuin-02#bash
+    [okoeroo@Speeltuin-02 ~]$ cd /mnt/flash/.extensions/
+    [okoeroo@Speeltuin-02 ~]$ wget arp-2-bgp-arista-0.0.1-1.noarch.rpm
+
+To verify the installation use the 'show extensions' command. In the following
+output you can see what it looks like if one of the RPMs is not recognized by
+EOS:
+    Speeltuin-02>
+    Speeltuin-02>ena
+    Speeltuin-02#show extensions
+    Name                                       Version/Release           Status RPMs
+    ------------------------------------------ ------------------------- ------ ----
+    arp-2-bgp-arista-0.0.1-1.noarch.rpm        0.0.1/1                   A, I      1
+    gin.rpm                                    Error: extension is not available            
+
+    A: available | NA: not available | I: installed | NI: not installed | F: forced
+
+
+2. Installing the extension
+---------------------------
+Using the switch Cli is the simplest solution to install an extension. Use the
+following command to install the extension:
+    Speeltuin-02>
+    Speeltuin-02>ena
+    Speeltuin-02>extension arp-2-bgp-arista-0.0.1-1.noarch.rpm
+
+Note:
+The installation of the extension has the effective result of installing the
+package into the RPM database on the Arista with the other packages. All
+possible features provided from RPMs can be used to your advantage, for
+instance the pre- and postinstall features:
+    [okoeroo@Speeltuin-02 ~]$ rpm -qa | grep arp-2-bgp
+    arp-2-bgp-arista-0.0.1-1.noarch
+
+
+
+3. Making the extension persistent
+----------------------------------
+After sufficient testing the installed extensions can be made persistent to
+survive a switch reload. Use the following command to make them all persistent
+at once:
+    Speeltuin-02>
+    Speeltuin-02>ena
+    Speeltuin-02>copy installed-extensions boot-extensions
+
+
+4. To uninstall the extension
+-----------------------------
+To uninstall the extension remove the package from the file
+'/mnt/flash/boot-extensions' by editing it with Vi (or another editor) followed
+by a system reload.
