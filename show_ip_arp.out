@@ -1,6 +1,3 @@
-#!/bin/sh
-
-cat << EOF
 Address         Age (min)  Hardware Addr   Interface
 172.25.1.252            0  001c.7308.fb8d  Ethernet39
 172.25.2.253            0  001c.7308.f956  Ethernet40
@@ -8,5 +5,3 @@ Address         Age (min)  Hardware Addr   Interface
 192.168.252.6           0  000c.2933.c0e0  Vlan12, not learned
 192.168.252.254         0  001b.edbd.5c00  Vlan12, Ethernet48
 194.171.96.126          0  001b.edbd.5c00  Vlan66, Ethernet48
-194.171.96.126          0  001b.edbd.5c00  Vlan66, Ethernet48
-EOF
