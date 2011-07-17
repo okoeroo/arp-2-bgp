@@ -121,6 +121,7 @@ class Arp2BgpConfiguration(object):
     exclude_vlan_on_interface = []
     defaults_selection        = 'ignore'  # Could be 'add', 'ignore' or 'remove'
     as_number                 = None
+    settings_mode             = 'test'    # Could be 'test' or 'live'
 
     def __init__(self, conffile='/etc/arp-2-bgp.conf'):
         try:
@@ -166,6 +167,10 @@ class Arp2BgpConfiguration(object):
             except:
                 print "Error in configuration file: Syntax error. Please fix the configuration file to be a proper .ini style config file"
                 raise
+
+            if config.has_section('settings'):
+                if config.has_option('settings', 'mode'):
+                    self.settings_mode = str(config.get("settings", 'mode')).lower()
 
             if config.has_section('excludes'):
                 if config.has_option('excludes', 'interfaces'):
@@ -247,6 +252,14 @@ class Arp2BgpConfiguration(object):
                 if excl_vlan_on_iface['vlan'] and excl_vlan_on_iface['iface']:
                     return True
         return False
+
+    def get_mode(self):
+        return self.settings_mode
+
+    def run_in_test_mode(self):
+        if self.settings_mode == 'test':
+            return True
+        return self.settings_mode
 
 
 class AristaConnectedHost(object):
@@ -561,8 +574,11 @@ class Arp2Bgp(object):
     def __init__(self, conffile="/etc/arp-2-bgp.conf", test_mode=False, fake_output_path=''):
         self.test_mode = test_mode
 
+        # Read configuration file, if available
+        self.a2bconfig = Arp2BgpConfiguration(conffile)
+
         # Install the AristaProcessor object - Used to execute commands on the switch Cli
-        self.ap = AristaProcessor(test_mode, fake_output_path)
+        self.ap = AristaProcessor(self.a2bconfig.run_in_test_mode(), fake_output_path)
 
         # Initialize switch state
         self.aristaswitchstate = AristaSwitchState(self.ap)
@@ -570,9 +586,6 @@ class Arp2Bgp(object):
         self.aristaswitchstate.load_current_bgp_table()
         # Read ARP information combined with active link/Vlan allocation
         self.aristaswitchstate.load_ip_and_link_info()
-
-        # Read configuration file, if available
-        self.a2bconfig = Arp2BgpConfiguration(conffile)
 
         if self.test_mode:
             print "Current SwitchState:"
@@ -652,6 +665,7 @@ class Arp2Bgp(object):
         table_bgp_add = self.get_table_bgp_add()
         table_bgp_del = self.get_table_bgp_del()
 
+        # Debug info
         if self.test_mode:
             print "Addition from static route announcement:"
             for i in table_bgp_add:
@@ -661,13 +675,18 @@ class Arp2Bgp(object):
                 print "    " + i['ip']
                 # print "    " + i['ip'] + " vlan: " + i['vlan']
 
+        # If there is nothing to do, nothing will be done
         if (table_bgp_add == []) and (table_bgp_del == []):
             if self.test_mode:
                 print "Nothing to add and nothing to remove"
             return table_cmds
 
+
+        # Make commands
+
         table_cmds.append("conf t")
         # table_cmds.append("router bgp %s" % self.defaults_asnumber)
+
 
         if table_bgp_add != None:
             for ip_link_bgp in table_bgp_add:
@@ -684,13 +703,6 @@ class Arp2Bgp(object):
 
         return table_cmds
 
-    def print_reconfigure_bgp(self):
-        table_cmds = self.get_build_cmd_table_to_reconfigure_bgp()
-
-        print "ena"
-        for cmd in table_cmds:
-            print cmd
-
     def reconfigure_bgp(self):
         # Construct commands list and execute it
         return self.ap.sendCmdOnCli(self.get_build_cmd_table_to_reconfigure_bgp())
@@ -704,11 +716,6 @@ if __name__ == "__main__":
         a2b = Arp2Bgp(run_test_mode, fake_output_path)
 
     if run_test_mode:
-        print "To append to the BGP list"
-        print a2b.get_table_bgp_add()
-        print "To delete from the BGP list"
-        print a2b.get_table_bgp_del()
-
         print "xxxxxxxxxxxxxxxxxxxx"
         print "xxx ReConfig BGP xxx"
         print "xxxxxxxxxxxxxxxxxxxx"

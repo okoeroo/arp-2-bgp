@@ -1,0 +1,7 @@
+#!/bin/sh
+
+EOS_RC_PATH="${EOS_RC_PATH:=/mnt/flash}"
+EOS_RC_D="eos.rc.d"
+
+
+

@@ -20,19 +20,6 @@ long_description=open('README').read()
 
 
 setup(
-    name=name + "-generic",
-    version=version,
-    description=description,
-    keywords=keywords,
-    author=author,
-    author_email=author_email,
-    url=url,
-    data_files=data_files,
-    options=options,
-    long_description=long_description
-)
-
-setup(
     name=name + "-arista",
     version=version,
     description=description,
