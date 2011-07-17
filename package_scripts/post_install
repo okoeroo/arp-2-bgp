@@ -4,4 +4,5 @@ EOS_RC_PATH="${EOS_RC_PATH:=/mnt/flash}"
 EOS_RC_D="eos.rc.d"
 
 
+ln -s /mnt/flash/eos.sysconfig/arp-2-bgp/arp-2-bgp.conf /etc/arp-2-bgp.conf
 
