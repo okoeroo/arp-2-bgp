@@ -4,7 +4,8 @@ from distutils.core import setup
 
 
 name="arp-2-bgp"
-version="0.0.2"
+version="0.0.3"
+vendor="Nikhef"
 description="Based on Arp information announce routes to a particular host using BGP"
 keywords = 'arista networks switch arp bgp BGP'
 author="Oscar Koeroo"
@@ -23,6 +24,7 @@ long_description=open('README').read()
 setup(
     name=name + "-arista",
     version=version,
+    vendor=vendor,
     description=description,
     keywords=keywords,
     author=author,

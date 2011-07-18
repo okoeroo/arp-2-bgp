@@ -1,5 +1,9 @@
 #!/bin/sh
 
+### Website: https://github.com/okoeroo/arp-2-bgp
+### Author:  Oscar Koeroo <okoeroo@nikhef.nl>
+
+
 EOS_RC_PATH="${EOS_RC_PATH:=/mnt/flash}"
 EOS_RC_D="eos.rc.d"
 EOS_SYSCONF_DIR="${EOS_RC_PATH}/eos.sysconfig"
@@ -11,21 +15,6 @@ A2B_PERSIST_CONF_PATH="${EOS_SYSCONF_DIR}/${A2B_NAME}/${A2B_CONF}"
 A2B_CONF_PATH="/etc/${A2B_CONF}"
 
 
-if [ ! -d "${EOS_RC_PATH}/${EOS_RC_D}" ]; then
-    exit 1
-fi
-
-cat >> ${EOS_RC_PATH}/${EOS_RC_D}/${A2B_SCRIPT} <<EOF
-#!/bin/sh
-
-### Originates from the postinstall of the arp-2-bgp package.
-### Website: https://github.com/okoeroo/arp-2-bgp
-### Author:  Oscar Koeroo <okoeroo@nikhef.nl>
-
 
 ln -s ${A2B_PERSIST_CONF_PATH} ${A2B_CONF_PATH}
 
-
-EOF
-
-exit 0
