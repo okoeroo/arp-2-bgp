@@ -4,7 +4,7 @@ from distutils.core import setup
 
 
 name="arp-2-bgp"
-version="0.0.1"
+version="0.0.2"
 description="Based on Arp information announce routes to a particular host using BGP"
 keywords = 'arista networks switch arp bgp BGP'
 author="Oscar Koeroo"

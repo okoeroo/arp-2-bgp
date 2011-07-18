@@ -242,14 +242,14 @@ class Arp2BgpConfiguration(object):
     def is_vlan_on_interface_included(self, vlan, iface):
         if self.include_vlan_on_interface != None:
             for incl_vlan_on_iface in self.include_vlan_on_interface:
-                if incl_vlan_on_iface['vlan'] and incl_vlan_on_iface['iface']:
+                if incl_vlan_on_iface['vlan'] == vlan and incl_vlan_on_iface['iface'] == iface:
                     return True
         return False
 
     def is_vlan_on_interface_excluded(self, vlan, iface):
         if self.exclude_vlan_on_interface != None:
             for excl_vlan_on_iface in self.exclude_vlan_on_interface:
-                if excl_vlan_on_iface['vlan'] and excl_vlan_on_iface['iface']:
+                if excl_vlan_on_iface['vlan'] == vlan and excl_vlan_on_iface['iface'] == iface:
                     return True
         return False
 
@@ -259,8 +259,8 @@ class Arp2BgpConfiguration(object):
     def run_in_test_mode(self):
         if self.settings_mode == 'test':
             return True
-        return self.settings_mode
-
+        else
+            return False
 
 class AristaConnectedHost(object):
     def __init__(self, ip_or_mac, type='ip'):
@@ -597,14 +597,22 @@ class Arp2Bgp(object):
         table_filtered_arp_input = []
 
         for vlan in self.aristaswitchstate.vlans:
+            # Skip vlan consideration if its excluded
             if self.a2bconfig.is_vlan_excluded(vlan.get_vlan()):
                 continue
+
+            # Add all connected hosts to the filtered list if they belong to
+            # the included vlan
             if self.a2bconfig.is_vlan_included(vlan.get_vlan()):
                 for host in vlan.connected_hosts:
                     tuple = {}
                     tuple['ip'] = host.ip
                     tuple['vlan'] = vlan.get_vlan()
                     table_filtered_arp_input.append(tuple)
+
+
+            # TODO
+
         return table_filtered_arp_input
 
     # Only concider /32 routes (direct host routes)
