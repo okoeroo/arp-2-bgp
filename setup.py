@@ -11,6 +11,7 @@ author="Oscar Koeroo"
 author_email="okoeroo@nikhef.nl"
 url="https://github.com/okoeroo/arp-2-bgp"
 data_files=[  ('/mnt/flash/eos.sysconfig/arp-2-bgp', ['arp2bgp/arp-2-bgp.conf']),
+              ('/mnt/flash/eos.rc.d/',               ['arp2bgp/arp-2-bgp.boot.sh']),
               ('/etc/cron.d',                        ['arp2bgp/arp-2-bgp.cron']),
               ('/usr/bin',                           ['arp2bgp/arp-2-bgp.py'])
            ]
